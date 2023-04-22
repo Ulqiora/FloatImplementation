@@ -46,13 +46,26 @@ int FloatToInt(Float value) {
     int mantissa = GetMantissa(value), mantissa_copy = mantissa;
     printf("exp: %d\n",exp);
     printf("mantissa: %d\n",mantissa);
-    while (mantissa_copy != 1) {
-        exp--;
-        mantissa_copy >>= 1;
+    printf("exp: %d\n", exp);
+    printf("mantissa: %d\n", mantissa);
+    if (exp >= 0) {
+        int numberAfterDot= CalcDegreeForFloat(mantissa);
+        printf("numberAfterDot : %d\n",numberAfterDot);
+        // while ((mantissa_copy != 1 && exp!=0)) {
+        //     exp--;
+        //     mantissa >>= 1;
+        // }
+        mantissa<<=exp;
+        mantissa>>=numberAfterDot;
+        return mantissa * (GetSign(value) ? (-1) : (1));
+    } else {
+        mantissa>>(-exp);
+        int numberAfterDot= CalcDegreeForFloat(mantissa);
+        printf("numberAfterDot : %d\n",numberAfterDot);
+        if(mantissa & 1<<(numberAfterDot-1+exp) || mantissa & 1<<(numberAfterDot-2+exp)) return 1;
+        return 0;
     }
-    printf("exp: %d\n",exp);
-    printf("mantissa: %d\n",mantissa);
-    return mantissa * (1 << (exp)) * (GetSign(value) ? (-1) : (1));
+    111110101110000101001;
 }
 Float FloatToFloat(float value) {
     Float temp = {*((int*)&value)};

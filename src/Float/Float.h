@@ -36,7 +36,8 @@ int FloatToInt(Float value);
 Float FloatToFloat(float value);
 //
 
-Float addiction(Float val1,Float val2);
+Float AdditionWithoutSign(Float val1,Float val2);
+Float SubtractionWithoutSign(Float val1,Float val2);
 int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);
 int shiftByOrder(int* mant1,int* mant2,int degree1,int degree2);
 // int shiftMantisses(int* mantissa1,int* mantissa2, int shift);

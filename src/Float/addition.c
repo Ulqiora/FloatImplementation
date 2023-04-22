@@ -1,19 +1,11 @@
 #include "Float.h"
-
-Float addiction(Float val1, Float val2) {
+// сложение чисел без учета знака
+Float AdditionWithoutSign(Float val1, Float val2) {
     Float result = {0};
-    printf("before alignment by dot\n");
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-
     int exp1 = CalcDegreeForFloat(mantissa1) - 1,
         exp2 = CalcDegreeForFloat(mantissa2) - 1;
     int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!(mantissa1 & mask));
-    printf("\n");
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!(mantissa2 & mask));
-    printf("\n");
     int currentDegree =
         shiftByOrder(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
         DEGREE_SHIFT;
@@ -23,12 +15,12 @@ Float addiction(Float val1, Float val2) {
         mantissa >>= (expRes - numAfterDot);
     else
         mantissa <<= (numAfterDot - expRes);
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!(mantissa & mask));
-    printf("\n");
-    printf("currentDegree = %d\n",currentDegree);
-    printf("expRes = %d\n",expRes);
-    printf("numAfterDot = %d\n",numAfterDot);
+    // for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
+    //     printf("%d", !!(mantissa & mask));
+    // printf("\n");
+    // printf("currentDegree = %d\n",currentDegree);
+    // printf("expRes = %d\n",expRes);
+    // printf("numAfterDot = %d\n",numAfterDot);
     currentDegree+=(expRes - numAfterDot);
     SetMantissa(&result, mantissa);
     SetDegree(&result, currentDegree + DEGREE_SHIFT);
@@ -42,6 +34,37 @@ Float addiction(Float val1, Float val2) {
     // SetDegree(&result, exp - numAfterDot + alignOrder+DEGREE_SHIFT);
     return result;
 }
+
+Float SubtractionWithoutSign(Float val1, Float val2){
+    Float result = {0};
+    int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
+    int exp1 = CalcDegreeForFloat(mantissa1) - 1,
+        exp2 = CalcDegreeForFloat(mantissa2) - 1;
+    int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
+    int currentDegree =
+        shiftByOrder(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
+        DEGREE_SHIFT;
+    exp1 = CalcDegreeForFloat(mantissa1) - 1,
+    exp2 = CalcDegreeForFloat(mantissa2) - 1;
+    int mantissa = mantissa1 - mantissa2;
+    if (mantissa & SIGN_BIT_MASK) {
+        mantissa = mantissa2 - mantissa1;
+        SetSign(&result);
+    }
+    int expRes= CalcDegreeForFloat(mantissa) - 1;
+    if (expRes > numAfterDot)
+        mantissa >>= (expRes - numAfterDot);
+    else
+        mantissa <<= (numAfterDot - expRes);
+    currentDegree+=(expRes - numAfterDot);
+    int exp = CalcDegreeForFloat(mantissa) - 1;
+    mantissa = (exp > 22) ? mantissa >> (exp - 22) : mantissa << (22 - exp);
+    SetMantissa(&result, mantissa);
+    SetDegree(&result, currentDegree + DEGREE_SHIFT);
+    return result;
+}
+
+
 
 int shiftByDot(int* mant1, int* mant2, int degree1, int degree2) {
     if (degree1 > degree2) {
@@ -64,18 +87,12 @@ int shiftByOrder(int* mant1, int* mant2, int degree1, int degree2) {
     } else if(degree1 < degree2){
         while(degree1 != degree2) degree1++, *mant1>>=1;
     }
-    printf("exp1  =  %d   %d\n",degree1 - DEGREE_SHIFT,degree2 - DEGREE_SHIFT);
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!((*mant1) & mask));
-    printf("\n");
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!((*mant2) & mask));
-    printf("\n");
+    // printf("exp1  =  %d   %d\n",degree1 - DEGREE_SHIFT,degree2 - DEGREE_SHIFT);
+    // for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
+    //     printf("%d", !!((*mant1) & mask));
+    // printf("\n");
+    // for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
+    //     printf("%d", !!((*mant2) & mask));
+    // printf("\n");
     return degree1;
 }
-
-// int shiftMantisses(int* mantissa1,int* mantissa2, int shift){
-//     if(shift == 0) return 0;
-//     if(shift<0)
-// }
-// 100000110001001001101111
