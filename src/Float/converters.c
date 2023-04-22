@@ -1,7 +1,7 @@
 #include "Float.h"
 void SetSign(Float* temp) { temp->value_ |= (1 << (NUMBER_BITS_IN_FLOAT - 1)); }
 int GetSign(Float temp) { return temp.value_ & SIGN_BIT_MASK; }
-
+void ResetSign(Float* temp){ temp->value_ &= SIGN_RESET_BIT_MASK;}
 //      Получает значение мантиссы с учетом целочисленной единицы и удалением пустых нулей в конце
 int GetMantissa(Float value) {
     if(value.value_ == 0) return 0;
@@ -44,13 +44,13 @@ Float IntToFloat(int value) {
 int FloatToInt(Float value) {
     int exp = GetDegree(value) - DEGREE_SHIFT;
     int mantissa = GetMantissa(value), mantissa_copy = mantissa;
-    printf("exp: %d\n",exp);
-    printf("mantissa: %d\n",mantissa);
-    printf("exp: %d\n", exp);
-    printf("mantissa: %d\n", mantissa);
+    // printf("exp: %d\n",exp);
+    // printf("mantissa: %d\n",mantissa);
+    // printf("exp: %d\n", exp);
+    // printf("mantissa: %d\n", mantissa);
     if (exp >= 0) {
         int numberAfterDot= CalcDegreeForFloat(mantissa);
-        printf("numberAfterDot : %d\n",numberAfterDot);
+        // printf("numberAfterDot : %d\n",numberAfterDot);
         // while ((mantissa_copy != 1 && exp!=0)) {
         //     exp--;
         //     mantissa >>= 1;
@@ -61,11 +61,11 @@ int FloatToInt(Float value) {
     } else {
         mantissa>>(-exp);
         int numberAfterDot= CalcDegreeForFloat(mantissa);
-        printf("numberAfterDot : %d\n",numberAfterDot);
+        // printf("numberAfterDot : %d\n",numberAfterDot);
         if(mantissa & 1<<(numberAfterDot-1+exp) || mantissa & 1<<(numberAfterDot-2+exp)) return 1;
         return 0;
     }
-    111110101110000101001;
+    // 111110101110000101001;
 }
 Float FloatToFloat(float value) {
     Float temp = {*((int*)&value)};

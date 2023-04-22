@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #define SIGN_BIT_MASK 0x80000000
+#define SIGN_RESET_BIT_MASK 0x7FFFFFFF
 #define FIRST_DEGREE_BIT_MASK 0x40000000
 #define GET_DEGREE_BIT_MASK 0x7F800000
 #define FIRST_MANTISSA_BIT_MASK 0x400000
@@ -21,6 +22,7 @@ void PrintMantissa(Float temp);
 void PrintBits(Float temp);
 
 void SetSign(Float* temp);
+void ResetSign(Float* temp);
 int GetSign(Float temp);
 int GetMantissa(Float value);
 void SetMantissa(Float* temp,int mantissa);
@@ -35,7 +37,7 @@ int FloatToInt(Float value);
 // 
 Float FloatToFloat(float value);
 //
-
+Float addiction(Float val1,Float val2);
 Float AdditionWithoutSign(Float val1,Float val2);
 Float SubtractionWithoutSign(Float val1,Float val2);
 int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);

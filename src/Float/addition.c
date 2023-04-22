@@ -64,7 +64,20 @@ Float SubtractionWithoutSign(Float val1, Float val2){
     return result;
 }
 
-
+Float addiction(Float val1,Float val2){
+    if(GetSign(val1) == GetSign(val2)){
+        int sign = GetSign(val1);
+        if(sign) ResetSign(&val1), ResetSign(&val1);
+        Float result=AdditionWithoutSign(val1,val2);
+        if(sign) SetSign(&result);
+        return result;
+    } else {
+        int neg = GetSign(val1)?1:2;
+        ResetSign(&val1),ResetSign(&val2);
+        if(neg==1) return SubtractionWithoutSign(val2,val1);
+        else return SubtractionWithoutSign(val1,val2);
+    }
+}
 
 int shiftByDot(int* mant1, int* mant2, int degree1, int degree2) {
     if (degree1 > degree2) {
