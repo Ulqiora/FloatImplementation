@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 BD=../build
 GCOV_REPORT_FOLDER=$(BD)
 CXX_FLAGS=-c #-Wall -Werror -Wextra
@@ -24,15 +24,20 @@ all: clean start
 	$(CC) $(CXX_FLAGS) $< -o $@
 
 #              Файлы для основного проекта
-PROJECT_FILES_SOURCES=$(shell find $(PWD) -iname '*.c')
-PROJECT_FILES_FILENAMES=$(shell basename -a $(PROJECT_FILES_SOURCES))
+PROJECT_FILES_SOURCES=$(shell find $(PWD)/Float -iname '*.c') $(shell find $(PWD) -iname 'main.c')
+PROJECT_FILES_FILENAMES=$(shell basename -a $(PROJECT_FILES_SOURCES) )
 PROJECT_FILES_OBJECTS=$(addprefix $(BD)/,$(PROJECT_FILES_FILENAMES:.c=.o))
+
+TESTS_FILES_SOURCES=$(shell find $(PWD)/Float -iname '*.c') $(shell find $(PWD) -iname 'test.c')
+TESTS_FILES_FILENAMES=$(shell basename -a $(TESTS_FILES_SOURCES))
+TESTS_FILES_OBJECTS=$(addprefix $(BD)/,$(TESTS_FILES_FILENAMES:.c=.o))
 
 tests:$(TESTS_FILES_OBJECTS)
 	$(CC) -g  $^ -o $(BD)/$@ $(GTESTFLAGS)
-
-run: tests
 	./$(BD)/tests
+
+# run: tests
+# 	./$(BD)/tests
 
 start:$(PROJECT_FILES_OBJECTS) 
 	$(CC) -g  $^ -o $(BD)/$@ 

@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "float.h": "c"
+        "float.h": "c",
+        "stdio.h": "c",
+        "cmath": "c",
+        "gtest.h": "c"
     }
 }

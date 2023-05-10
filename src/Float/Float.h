@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 #define SIGN_BIT_MASK 0x80000000
-#define SIGN_RESET_BIT_MASK 0x7FFFFFFF
 #define FIRST_DEGREE_BIT_MASK 0x40000000
 #define GET_DEGREE_BIT_MASK 0x7F800000
 #define FIRST_MANTISSA_BIT_MASK 0x400000
@@ -14,6 +13,10 @@
 typedef struct float_s {
     unsigned int value_;
 } Float;
+
+
+Float MultiplicationWithoutSign(Float val1,Float val2);
+
 
 
 void PrintSign(Float temp);
@@ -30,16 +33,16 @@ int GetDegree(Float value);
 void SetDegree(Float* temp,int value);
 
 
-int CalcDegreeForFloat(unsigned int value);
-int IntWithoutSign(int value);
-Float IntToFloat(int value);
-int FloatToInt(Float value);
+int calcNumDigitsAfterDot(unsigned int value);
+int CustomAbs(int value);
+Float IntToCustomFloat(int value);
+int CustomFloatToInt(Float value);
 // 
-Float FloatToFloat(float value);
+Float StandartFloatToCustomFloat(float value);
 //
 Float addiction(Float val1,Float val2);
 Float AdditionWithoutSign(Float val1,Float val2);
 Float SubtractionWithoutSign(Float val1,Float val2);
 int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);
-int shiftByOrder(int* mant1,int* mant2,int degree1,int degree2);
+int shiftByDegree(int* mant1,int* mant2,int degree1,int degree2);
 // int shiftMantisses(int* mantissa1,int* mantissa2, int shift);

@@ -3,14 +3,14 @@
 Float AdditionWithoutSign(Float val1, Float val2) {
     Float result = {0};
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-    int exp1 = CalcDegreeForFloat(mantissa1) - 1,
-        exp2 = CalcDegreeForFloat(mantissa2) - 1;
+    int exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
+        exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
     int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
-        shiftByOrder(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
+        shiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
         DEGREE_SHIFT;
     int mantissa = mantissa1 + mantissa2;
-    int expRes= CalcDegreeForFloat(mantissa) - 1;
+    int expRes= calcNumDigitsAfterDot(mantissa) - 1;
     if (expRes > numAfterDot)
         mantissa >>= (expRes - numAfterDot);
     else
@@ -24,7 +24,7 @@ Float AdditionWithoutSign(Float val1, Float val2) {
     currentDegree+=(expRes - numAfterDot);
     SetMantissa(&result, mantissa);
     SetDegree(&result, currentDegree + DEGREE_SHIFT);
-    // int exp = CalcDegreeForFloat(mantissa) - 1;
+    // int exp = calcNumDigitsAfterDot(mantissa) - 1;
     // mantissa = (exp > 22) ? mantissa >> (exp - 22) : mantissa << (22 - exp);
     // if(exp > 22) exp=22;
     // SetMantissa(&result, mantissa);
@@ -38,26 +38,26 @@ Float AdditionWithoutSign(Float val1, Float val2) {
 Float SubtractionWithoutSign(Float val1, Float val2){
     Float result = {0};
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-    int exp1 = CalcDegreeForFloat(mantissa1) - 1,
-        exp2 = CalcDegreeForFloat(mantissa2) - 1;
+    int exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
+        exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
     int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
-        shiftByOrder(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
+        shiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
         DEGREE_SHIFT;
-    exp1 = CalcDegreeForFloat(mantissa1) - 1,
-    exp2 = CalcDegreeForFloat(mantissa2) - 1;
+    exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
+    exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
     int mantissa = mantissa1 - mantissa2;
     if (mantissa & SIGN_BIT_MASK) {
         mantissa = mantissa2 - mantissa1;
         SetSign(&result);
     }
-    int expRes= CalcDegreeForFloat(mantissa) - 1;
+    int expRes= calcNumDigitsAfterDot(mantissa) - 1;
     if (expRes > numAfterDot)
         mantissa >>= (expRes - numAfterDot);
     else
         mantissa <<= (numAfterDot - expRes);
     currentDegree+=(expRes - numAfterDot);
-    int exp = CalcDegreeForFloat(mantissa) - 1;
+    int exp = calcNumDigitsAfterDot(mantissa) - 1;
     mantissa = (exp > 22) ? mantissa >> (exp - 22) : mantissa << (22 - exp);
     SetMantissa(&result, mantissa);
     SetDegree(&result, currentDegree + DEGREE_SHIFT);
@@ -78,7 +78,15 @@ Float addiction(Float val1,Float val2){
         else return SubtractionWithoutSign(val1,val2);
     }
 }
-
+/**
+ * CustomFloatToInt
+ * опреобразование в int
+ * @param[out] value мантисса первого числа.
+ * @param[out] value мантисса второго числа.
+ * @param[in] value порядок первого числа.
+ * @param[in] value порядок второго числа.
+ * @return порядок, по которому выравнены числа.
+ */
 int shiftByDot(int* mant1, int* mant2, int degree1, int degree2) {
     if (degree1 > degree2) {
         (*mant2) <<= (degree1 - degree2);
@@ -88,7 +96,8 @@ int shiftByDot(int* mant1, int* mant2, int degree1, int degree2) {
         return degree2;
     }
 }
-int shiftByOrder(int* mant1, int* mant2, int degree1, int degree2) {
+
+int shiftByDegree(int* mant1, int* mant2, int degree1, int degree2) {
     printf("after alignment by dot\n");
     if (degree1 > degree2) {
         while(degree1 != degree2 && (!(*mant1&0x40000000))) degree1--, *mant1<<=1;

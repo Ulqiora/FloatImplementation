@@ -1,73 +1,112 @@
 #include "Float.h"
-void SetSign(Float* temp) { temp->value_ |= (1 << (NUMBER_BITS_IN_FLOAT - 1)); }
-int GetSign(Float temp) { return temp.value_ & SIGN_BIT_MASK; }
-void ResetSign(Float* temp){ temp->value_ &= SIGN_RESET_BIT_MASK;}
-//      Получает значение мантиссы с учетом целочисленной единицы и удалением пустых нулей в конце
+void SetSign(Float* temp) { temp->value_ |= SIGN_BIT_MASK; }
+int GetSign(Float temp) { return !!(temp.value_ & SIGN_BIT_MASK); }
+void ResetSign(Float* temp){ temp->value_ &=~ SIGN_BIT_MASK;}
+/**
+ * GetMantissa
+ * Данная фунция вычисляет значение мантиссы с учетом первой единицы и смещением до первой единицы с конца.
+ * @param[in] value число, чью мантиссу необходимо получить.
+ * @return Мантиссу числа.
+ */
 int GetMantissa(Float value) {
     if(value.value_ == 0) return 0;
     int mantissa = (value.value_&SET_MANTISSA_BITS_MASK)|(FIRST_MANTISSA_BIT_MASK<<1);
     while ((!(mantissa & 1))) { mantissa >>= 1; }
     return mantissa;
 }
-//      Устанавливает биты для мантиссы
+/**
+ * SetMantissa
+ * Устанавливает биты для мантиссы, которая уже смещена под нужные разряды.
+ * @param[out] res число, чью мантиссу необходимо изменить.
+ * @param[in] mantissa мантисса, вставляемая в переменную.
+ */
 void SetMantissa(Float* res,int mantissa) {
+    res->value_ &=~ SET_MANTISSA_BITS_MASK;
     res->value_ |= (mantissa & SET_MANTISSA_BITS_MASK);
 }
 //      Возвращает порядок числа
+/**
+ * GetDegree
+ * получает порядок числа.
+ * @param[in] value число, чей порядок необходимо получить.
+ * @return порядок числа(диапазон: 0-255).
+ */
 int GetDegree(Float value){
     return ((value.value_ & GET_DEGREE_BIT_MASK) >> NUMBER_BITS_IN_MANTISSA);
 }
-//      Устанавливает порядок числа
-void SetDegree(Float* temp,int value){
-    temp->value_ |= (value) << NUMBER_BITS_IN_MANTISSA;
+/**
+ * SetDegree
+ * Устанавливает порядок числа
+ * @param[out] res число, чей порядок необходимо изменить.
+ * @param[in] degree порядок числа(диапазон: 0-255).
+ */
+void SetDegree(Float* res, int degree){
+    res->value_ &=~ GET_DEGREE_BIT_MASK;
+    res->value_ |= (degree) << NUMBER_BITS_IN_MANTISSA;
 }
-//      Получаем самую старшую степень двойки в числе
-int CalcDegreeForFloat(unsigned int value) {
+/**
+ * calcNumDigitsAfterDot
+ * Получает число цифр после первой единицы справа
+ * @param[out] value аргумент, число цифр котрого необходимо определить.
+ * @return результат.
+ */
+int calcNumDigitsAfterDot(unsigned int value) {
     int exp = 0;
     while (value >>= 1) exp++;
     return exp;
 }
-//      Модуль числа
-int IntWithoutSign(int value) { return (value >= 0) ? value : -value; }
-//      конвертер из int во Float
-Float IntToFloat(int value) {
+/**
+ * CustomAbs
+ * Модуль числа
+ * @param[out] res число, модуль которого берется.
+ * @return результат.
+ */
+int CustomAbs(int value) { return (value >= 0) ? value : -value; }
+/**
+ * IntToCustomFloat
+ * Получает число цифр после первой единицы справа
+ * @param[in] value число, котрое надо кастовать к Float.
+ * @return результат преобразования.
+ */
+Float IntToCustomFloat(int value) {
     Float temp = {0};
     if (!(value & 0xFFFFFFFF)) return temp;
-    if (value & SIGN_BIT_MASK) SetSign(&temp), value = IntWithoutSign(value);
-    int exp = CalcDegreeForFloat(value)-1;
-    SetDegree(&temp,exp+DEGREE_SHIFT);
-    int mantissa = (exp > 22) ? value >> (exp - 22) : value << (22 - exp);
+    if (value & SIGN_BIT_MASK) SetSign(&temp), value = CustomAbs(value);
+    int digitsAfterDots = calcNumDigitsAfterDot(value);
+    printf("number sign  after dot: %d\n", digitsAfterDots);
+    SetDegree(&temp,(digitsAfterDots--)+DEGREE_SHIFT);
+    int mantissa = (digitsAfterDots > 22) ? value >> (digitsAfterDots - 22) : value << (22 - digitsAfterDots);
     SetMantissa(&temp,mantissa);
     return temp;
 }
-//      конвертер из Float в Int
-int FloatToInt(Float value) {
+/**
+ * CustomFloatToInt
+ * опреобразование в int
+ * @param[in] value число, которое надо кастовать к int.
+ * @return результат преобразования.
+ */
+int CustomFloatToInt(Float value) {
     int exp = GetDegree(value) - DEGREE_SHIFT;
     int mantissa = GetMantissa(value), mantissa_copy = mantissa;
-    // printf("exp: %d\n",exp);
-    // printf("mantissa: %d\n",mantissa);
-    // printf("exp: %d\n", exp);
-    // printf("mantissa: %d\n", mantissa);
     if (exp >= 0) {
-        int numberAfterDot= CalcDegreeForFloat(mantissa);
-        // printf("numberAfterDot : %d\n",numberAfterDot);
-        // while ((mantissa_copy != 1 && exp!=0)) {
-        //     exp--;
-        //     mantissa >>= 1;
-        // }
+        int numberAfterDot= calcNumDigitsAfterDot(mantissa);
         mantissa<<=exp;
         mantissa>>=numberAfterDot;
         return mantissa * (GetSign(value) ? (-1) : (1));
     } else {
         mantissa>>(-exp);
-        int numberAfterDot= CalcDegreeForFloat(mantissa);
-        // printf("numberAfterDot : %d\n",numberAfterDot);
+        int numberAfterDot= calcNumDigitsAfterDot(mantissa);
         if(mantissa & 1<<(numberAfterDot-1+exp) || mantissa & 1<<(numberAfterDot-2+exp)) return 1;
         return 0;
     }
-    // 111110101110000101001;
 }
-Float FloatToFloat(float value) {
+/**
+ * CustomFloatToInt
+ * преобразование float к Float
+ * @param[in] value число, которое надо кастовать к Float.
+ * @return результат преобразования.
+ */
+Float StandartFloatToCustomFloat(float value) {
     Float temp = {*((int*)&value)};
     return temp;
 }
