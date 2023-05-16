@@ -32,7 +32,7 @@ void ResetSign(Float* temp);
  * GetSign
  * Получает бит знака.
  * @param[out] temp число, знак которого надо получить.
- * @return состояния бита знака.
+ * @return состояния бита знака(0-1).
  */
 int GetSign(Float temp);
 /**

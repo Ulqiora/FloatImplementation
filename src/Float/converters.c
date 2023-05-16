@@ -63,6 +63,6 @@ int CustomFloatToInt(Float value) {
 }
 
 Float StandartFloatToCustomFloat(float value) {
-    Float temp = {*((int*)&value)};
+    Float temp = {*((unsigned int*)&value)};
     return temp;
 }

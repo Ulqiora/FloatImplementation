@@ -2,26 +2,22 @@
 
 Float MultiplicationWithoutSign(Float val1,Float val2){
     Float res;
+    printf("sign1= %d\n",GetSign(val1));
+    if (GetSign(val1) ^ GetSign(val2)) SetSign(&res);
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
     int degree1 = GetDegree(val1) - 127,
         degree2 = GetDegree(val2) - 127;
+    int sumSign = calcNumDigitsAfterDot(mantissa2) + calcNumDigitsAfterDot(mantissa1);
+    for(;sumSign>30;sumSign-=2){
+        mantissa1>>=1;
+        mantissa2>>=1;
+    }
     int mantissa = mantissa1 * mantissa2;
-    int degreeRes=degree1+degree2;
-    printf("value1:\ndegree = %d\n",degree1);
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!(mantissa1 & mask));
-    printf("\n");
-    printf("value2:\ndegree = %d\n",degree2);
-    for (unsigned int i = 32,mask = SIGN_BIT_MASK; i > 0; i--, mask >>= 1)
-        printf("%d", !!(mantissa2 & mask));
-    printf("\n");
-    int numberSignAfterDots = calcNumDigitsAfterDot(mantissa)-1;
-
-    SetDegree(&res,degreeRes+127);
-    mantissa = (numberSignAfterDots > 22)
-                   ? mantissa >> (numberSignAfterDots - 22)
-                   : mantissa << (22 - numberSignAfterDots);
+    int numberSignAfterDots = calcNumDigitsAfterDot(mantissa);
+    SetDegree(&res,degree1+degree2+127+numberSignAfterDots-sumSign);
+    mantissa = (numberSignAfterDots > 23)
+                   ? mantissa >> (numberSignAfterDots - 23) 
+                   : mantissa << (23 - numberSignAfterDots);
     SetMantissa(&res,mantissa);
-    // printf("result of mul: %d\n",mantissa);
     return res;
 }
