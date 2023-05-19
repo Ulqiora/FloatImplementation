@@ -1,6 +1,6 @@
 #include "Float.h"
 
-Float MultiplicationWithoutSign(Float val1,Float val2){
+Float Multiplication(Float val1,Float val2){
     Float res;
     printf("sign1= %d\n",GetSign(val1));
     if (GetSign(val1) ^ GetSign(val2)) SetSign(&res);

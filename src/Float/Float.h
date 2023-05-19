@@ -14,8 +14,14 @@ typedef struct float_s {
     unsigned int value_;
 } Float;
 
-
-Float MultiplicationWithoutSign(Float val1,Float val2);
+/**
+ * Multiplication
+ * умножение двух чисел.
+ * @param[in] val1 первое число.
+ * @param[in] val2 второе число.
+ * @return Результат вычисления.
+ */
+Float Multiplication(Float val1,Float val2);
 /**
  * SetSign
  * Выставление бита знака.
@@ -135,7 +141,21 @@ int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);
  * @return порядок, по которому выравнены числа.
  */
 int shiftByDegree(int* mant1,int* mant2,int degree1,int degree2);
-//  Для тестирования
+/**
+ * FunctionActivation
+ * функция активации.
+ * @param[in] value аргумент.
+ * @return результат(0.0-1.0).
+ */
+Float FunctionActivation(Float value);
+/**
+ * FunctionActivation
+ * результат функции y=1/x.
+ * @param[in] value аргумент.
+ * @return результат   y .
+ */
+Float HyperbolicFunction(Float value);
+//                                                                          Для тестирования
 /**
  * CustomFloatToInt
  * преобразование float к Float

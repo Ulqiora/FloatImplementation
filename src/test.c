@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <gtest/gtest.h>
+#include <cmath>
 #include "Float/Float.h"
 TEST(FloatSign, GetSignTest1) {
     Float test=IntToCustomFloat(5);
@@ -87,42 +88,71 @@ TEST(FloatDegree, calcNumDigitsAfterDot1) {
     unsigned int test=23;
     EXPECT_EQ(4,calcNumDigitsAfterDot(test));
 }
-TEST(FloatDegree, IntToCustomFloat1) {
+TEST(MyFloat, IntToCustomFloat1) {
     Float test=IntToCustomFloat(63);
     PrintBits(test);
     EXPECT_EQ(0,GetSign(test));
     EXPECT_EQ(5,GetDegree(test)-DEGREE_SHIFT);
     EXPECT_EQ(0b111111,GetMantissa(test));
 }
-TEST(FloatDegree, IntToCustomFloat2) {
+TEST(MyFloat, IntToCustomFloat2) {
     Float test=IntToCustomFloat(-127);
     PrintBits(test);
     EXPECT_EQ(1,GetSign(test));
     EXPECT_EQ(6,GetDegree(test)-DEGREE_SHIFT);
     EXPECT_EQ(0b1111111,GetMantissa(test));
 }
-TEST(FloatDegree, IntToCustomFloat3) {
+TEST(MyFloat, IntToCustomFloat3) {
     Float test=IntToCustomFloat(0x7FFFFFFF);
     PrintBits(test);
     EXPECT_EQ(0,GetSign(test));
     EXPECT_EQ(30,GetDegree(test)-DEGREE_SHIFT);
     EXPECT_EQ(0x7FFFFFFF>>7,GetMantissa(test));
 }
-TEST(FloatDegree, StandartFloatToCustomFloat3) {
+TEST(MyFloat, StandartFloatToCustomFloat3) {
     Float test=StandartFloatToCustomFloat(42.5f);
     PrintBits(test);
     EXPECT_EQ(0,GetSign(test));
     EXPECT_EQ(5,GetDegree(test)-DEGREE_SHIFT);
     EXPECT_EQ(0b1010101,GetMantissa(test));
 }
-TEST(FloatDegree, StandartFloatToCustomFloat3) {
+TEST(MyFloat, StandartFloatToCustomFloat4) {
     Float test=StandartFloatToCustomFloat(42.5f);
     PrintBits(test);
     EXPECT_EQ(0,GetSign(test));
     EXPECT_EQ(5,GetDegree(test)-DEGREE_SHIFT);
     EXPECT_EQ(0b1010101,GetMantissa(test));
 }
-
+TEST(MyFloat, StandartFloatToCustomFloat5) {
+    Float test=StandartFloatToCustomFloat(42.5f);
+    PrintBits(test);
+    EXPECT_EQ(0,GetSign(test));
+    EXPECT_EQ(5,GetDegree(test)-DEGREE_SHIFT);
+    EXPECT_EQ(0b1010101,GetMantissa(test));
+}
+TEST(MyFloat, Addiction1) {
+    Float val1=StandartFloatToCustomFloat(42.5f);
+    Float val2=StandartFloatToCustomFloat(42.5f);
+    Float res = addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=85.0f;
+    EXPECT_EQ(resFloat,resStand);
+}
+TEST(MyFloat, Addiction2) {
+    float temp1 = 8954.632f, temp2 = 895.5632f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-2);
+}
+TEST(MyFloat, Addiction3) {
+    float temp1 = 0.75638f, temp2 = 0.125364f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-6);
+}
 
 int main(int argc, char* argv[]){
     testing::InitGoogleTest(&argc, argv);

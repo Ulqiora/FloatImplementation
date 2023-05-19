@@ -3,8 +3,10 @@
 Float AdditionWithoutSign(Float val1, Float val2) {
     Float result = {0};
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-    int exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
-        exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
+    int exp1 = calcNumDigitsAfterDot(mantissa1),
+        exp2 = calcNumDigitsAfterDot(mantissa2);
+    printf("exp1 = %d\n",exp1);
+    printf("exp2 = %d\n",exp2);
     int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
         shiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
@@ -15,9 +17,13 @@ Float AdditionWithoutSign(Float val1, Float val2) {
         mantissa >>= (expRes - numAfterDot);
     else
         mantissa <<= (numAfterDot - expRes);
+    int numberSignAfterDots = calcNumDigitsAfterDot(mantissa);
+    mantissa = (numberSignAfterDots > 23)
+                ? mantissa >> (numberSignAfterDots - 23) 
+                : mantissa << (23 - numberSignAfterDots);
     currentDegree+=(expRes - numAfterDot);
     SetMantissa(&result, mantissa);
-    SetDegree(&result, currentDegree + DEGREE_SHIFT);
+    SetDegree(&result, currentDegree + DEGREE_SHIFT+1);
     return result;
 }
 
