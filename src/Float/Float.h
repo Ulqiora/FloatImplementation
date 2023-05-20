@@ -70,12 +70,12 @@ int GetDegree(Float value);
  */
 void SetDegree(Float* temp,int value);
 /**
- * calcNumDigitsAfterDot
+ * CalcNumDigitsAfterDot
  * Получает число цифр после первой единицы справа
  * @param[out] value аргумент, число цифр котрого необходимо определить.
  * @return результат.
  */
-int calcNumDigitsAfterDot(unsigned int value);
+int CalcNumDigitsAfterDot(unsigned int value);
 /**
  * CustomAbs
  * Модуль числа
@@ -98,13 +98,13 @@ Float IntToCustomFloat(int value);
  */
 int CustomFloatToInt(Float value);
 /**
- * addiction
+ * Addiction
  * сложение двух чисел.
  * @param[in] val1 первое число.
  * @param[in] val2 второе число.
  * @return Результат вычисления.
  */
-Float addiction(Float val1,Float val2);
+Float Addiction(Float val1,Float val2);
 /**
  * AdditionWithoutSign
  * Сложение двух чисел без учета знака.
@@ -130,7 +130,7 @@ Float SubtractionWithoutSign(Float val1,Float val2);
  * @param[in] numberAfterDot2 число цифр после запятой для второго числа.
  * @return номер бита, после которого поставлена точка в мантиссах.
  */
-int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);
+int ShiftByDot(int* mant1,int* mant2,int degree1,int degree2);
 /**
  * CustomFloatToInt
  * опреобразование в int
@@ -140,7 +140,7 @@ int shiftByDot(int* mant1,int* mant2,int degree1,int degree2);
  * @param[in] degree2 порядок второго числа.
  * @return порядок, по которому выравнены числа.
  */
-int shiftByDegree(int* mant1,int* mant2,int degree1,int degree2);
+int ShiftByDegree(int* mant1,int* mant2,int degree1,int degree2);
 /**
  * FunctionActivation
  * функция активации.

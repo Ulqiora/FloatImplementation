@@ -27,7 +27,7 @@ void SetDegree(Float* res, int degree){
     res->value_ |= (degree) << NUMBER_BITS_IN_MANTISSA;
 }
 
-int calcNumDigitsAfterDot(unsigned int value) {
+int CalcNumDigitsAfterDot(unsigned int value) {
     int exp = 0;
     while (value >>= 1) exp++;
     return exp;
@@ -39,7 +39,7 @@ Float IntToCustomFloat(int value) {
     Float temp = {0};
     if (!(value & 0xFFFFFFFF)) return temp;
     if (value & SIGN_BIT_MASK) SetSign(&temp), value = CustomAbs(value);
-    int digitsAfterDots = calcNumDigitsAfterDot(value);
+    int digitsAfterDots = CalcNumDigitsAfterDot(value);
     SetDegree(&temp,(digitsAfterDots--)+DEGREE_SHIFT);
     int mantissa = (digitsAfterDots > 22) ? value >> (digitsAfterDots - 22) : value << (22 - digitsAfterDots);
     SetMantissa(&temp,mantissa);
@@ -50,13 +50,13 @@ int CustomFloatToInt(Float value) {
     int exp = GetDegree(value) - DEGREE_SHIFT;
     int mantissa = GetMantissa(value), mantissa_copy = mantissa;
     if (exp >= 0) {
-        int numberAfterDot= calcNumDigitsAfterDot(mantissa);
+        int numberAfterDot= CalcNumDigitsAfterDot(mantissa);
         mantissa<<=exp;
         mantissa>>=numberAfterDot;
         return mantissa * (GetSign(value) ? (-1) : (1));
     } else {
         mantissa>>(-exp);
-        int numberAfterDot= calcNumDigitsAfterDot(mantissa);
+        int numberAfterDot= CalcNumDigitsAfterDot(mantissa);
         if(mantissa & 1<<(numberAfterDot-1+exp) || mantissa & 1<<(numberAfterDot-2+exp)) return 1;
         return 0;
     }

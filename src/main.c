@@ -5,7 +5,7 @@ int main() {
     float val2=1/val;
     Float temp = StandartFloatToCustomFloat(val);
     Float temp2 = StandartFloatToCustomFloat(val2);
-    // Float res = addiction(temp,temp2);
+    // Float res = Addiction(temp,temp2);
     PrintBits(temp);
     PrintBits(temp2);
     // PrintBits(res);

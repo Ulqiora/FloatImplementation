@@ -3,21 +3,21 @@
 Float AdditionWithoutSign(Float val1, Float val2) {
     Float result = {0};
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-    int exp1 = calcNumDigitsAfterDot(mantissa1),
-        exp2 = calcNumDigitsAfterDot(mantissa2);
+    int exp1 = CalcNumDigitsAfterDot(mantissa1),
+        exp2 = CalcNumDigitsAfterDot(mantissa2);
     printf("exp1 = %d\n",exp1);
     printf("exp2 = %d\n",exp2);
-    int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
+    int numAfterDot = ShiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
-        shiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
+        ShiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
         DEGREE_SHIFT;
     int mantissa = mantissa1 + mantissa2;
-    int expRes= calcNumDigitsAfterDot(mantissa) - 1;
-    if (expRes > numAfterDot)
-        mantissa >>= (expRes - numAfterDot);
-    else
-        mantissa <<= (numAfterDot - expRes);
-    int numberSignAfterDots = calcNumDigitsAfterDot(mantissa);
+    int expRes= CalcNumDigitsAfterDot(mantissa) - 1;
+    // if (expRes > numAfterDot)
+    //     mantissa >>= (expRes - numAfterDot);
+    // else
+    //     mantissa <<= (numAfterDot - expRes);
+    int numberSignAfterDots = CalcNumDigitsAfterDot(mantissa);
     mantissa = (numberSignAfterDots > 23)
                 ? mantissa >> (numberSignAfterDots - 23) 
                 : mantissa << (23 - numberSignAfterDots);
@@ -30,33 +30,31 @@ Float AdditionWithoutSign(Float val1, Float val2) {
 Float SubtractionWithoutSign(Float val1, Float val2){
     Float result = {0};
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
-    int exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
-        exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
-    int numAfterDot = shiftByDot(&mantissa1, &mantissa2, exp1, exp2);
+    int exp1 = CalcNumDigitsAfterDot(mantissa1) - 1,
+        exp2 = CalcNumDigitsAfterDot(mantissa2) - 1;
+    int numAfterDot = ShiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
-        shiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
+        ShiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
         DEGREE_SHIFT;
-    exp1 = calcNumDigitsAfterDot(mantissa1) - 1,
-    exp2 = calcNumDigitsAfterDot(mantissa2) - 1;
     int mantissa = mantissa1 - mantissa2;
     if (mantissa & SIGN_BIT_MASK) {
         mantissa = mantissa2 - mantissa1;
         SetSign(&result);
     }
-    int expRes= calcNumDigitsAfterDot(mantissa) - 1;
-    if (expRes > numAfterDot)
-        mantissa >>= (expRes - numAfterDot);
-    else
-        mantissa <<= (numAfterDot - expRes);
-    currentDegree+=(expRes - numAfterDot);
-    int exp = calcNumDigitsAfterDot(mantissa) - 1;
+    // int expRes= СalcNumDigitsAfterDot(mantissa) - 1;
+    // if (expRes > numAfterDot)
+    //     mantissa >>= (expRes - numAfterDot);
+    // else
+    //     mantissa <<= (numAfterDot - expRes);
+    int exp = CalcNumDigitsAfterDot(mantissa) - 1;
+    currentDegree+=(exp - numAfterDot);
     mantissa = (exp > 22) ? mantissa >> (exp - 22) : mantissa << (22 - exp);
     SetMantissa(&result, mantissa);
     SetDegree(&result, currentDegree + DEGREE_SHIFT);
     return result;
 }
 
-Float addiction(Float val1,Float val2){
+Float Addiction(Float val1,Float val2){
     if(GetSign(val1) == GetSign(val2)){
         int sign = GetSign(val1);
         if(sign) ResetSign(&val1), ResetSign(&val1);
@@ -71,7 +69,7 @@ Float addiction(Float val1,Float val2){
     }
 }
 
-int shiftByDot(int* mant1, int* mant2, int numberAfterDot1, int numberAfterDot2) {
+int ShiftByDot(int* mant1, int* mant2, int numberAfterDot1, int numberAfterDot2) {
     if (numberAfterDot1 > numberAfterDot2) {
         (*mant2) <<= (numberAfterDot1 - numberAfterDot2);
         return numberAfterDot1;
@@ -81,7 +79,7 @@ int shiftByDot(int* mant1, int* mant2, int numberAfterDot1, int numberAfterDot2)
     }
 }
 
-int shiftByDegree(int* mant1, int* mant2, int degree1, int degree2) {
+int ShiftByDegree(int* mant1, int* mant2, int degree1, int degree2) {
     if (degree1 > degree2) {
         while(degree1 != degree2 && (!(*mant1&0x40000000))) degree1--, *mant1<<=1;
     } else {

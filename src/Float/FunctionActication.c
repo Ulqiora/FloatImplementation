@@ -12,7 +12,7 @@ Float HyperbolicFunction(Float value){
     char sign= GetSign(value);
     int degree=GetDegree(value)-DEGREE_SHIFT;
     int mantissa = GetMantissa(value);
-    int numberSignInMantissa = calcNumDigitsAfterDot(mantissa);
+    int numberSignInMantissa = CalcNumDigitsAfterDot(mantissa);
     int divisible = 1<<numberSignInMantissa;
     int degreeOfResult = 0;
     int mantissaResult = 0;

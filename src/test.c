@@ -84,9 +84,9 @@ TEST(FloatDegree, SetDegree2) {
     SetDegree(&test,123);
     EXPECT_EQ(123,GetDegree(test));
 }
-TEST(FloatDegree, calcNumDigitsAfterDot1) {
+TEST(FloatDegree, СalcNumDigitsAfterDot1) {
     unsigned int test=23;
-    EXPECT_EQ(4,calcNumDigitsAfterDot(test));
+    EXPECT_EQ(4,CalcNumDigitsAfterDot(test));
 }
 TEST(MyFloat, IntToCustomFloat1) {
     Float test=IntToCustomFloat(63);
@@ -133,7 +133,7 @@ TEST(MyFloat, StandartFloatToCustomFloat5) {
 TEST(MyFloat, Addiction1) {
     Float val1=StandartFloatToCustomFloat(42.5f);
     Float val2=StandartFloatToCustomFloat(42.5f);
-    Float res = addiction(val1, val2);
+    Float res = Addiction(val1, val2);
     float resFloat = *(float*)&res,resStand=85.0f;
     EXPECT_EQ(resFloat,resStand);
 }
@@ -141,18 +141,94 @@ TEST(MyFloat, Addiction2) {
     float temp1 = 8954.632f, temp2 = 895.5632f;
     Float val1=StandartFloatToCustomFloat(temp1);
     Float val2=StandartFloatToCustomFloat(temp2);
-    Float res = addiction(val1, val2);
+    Float res = Addiction(val1, val2);
     float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    printf("%g\n",resFloat);
+    printf("%g\n",resStand);
     EXPECT_TRUE(fabs(resFloat - resStand) < 1e-2);
 }
 TEST(MyFloat, Addiction3) {
     float temp1 = 0.75638f, temp2 = 0.125364f;
     Float val1=StandartFloatToCustomFloat(temp1);
     Float val2=StandartFloatToCustomFloat(temp2);
-    Float res = addiction(val1, val2);
+    Float res = Addiction(val1, val2);
     float resFloat = *(float*)&res,resStand=temp1 + temp2;
     EXPECT_TRUE(fabs(resFloat - resStand) < 1e-6);
 }
+
+TEST(MyFloat, Addiction4) {
+    float temp1 = 1.75638f, temp2 = -0.75638f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-6);
+}
+TEST(MyFloat, Addiction5) {
+    float temp1 = 1489.75638f, temp2 = -5729.75638f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-6);
+}
+TEST(MyFloat, Addiction6) {
+    float temp1 = -1489.75638f, temp2 = -5729.75638f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Addiction(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 + temp2;
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-6);
+}
+TEST(MyFloat, Multiplication1) {
+    float temp1 = -148.75638f, temp2 = -579.75638f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Multiplication(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 * temp2;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e1);
+}
+TEST(MyFloat, Multiplication2) {
+    float temp1 = -1.5f, temp2 = 1.5f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Multiplication(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 * temp2;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-5);
+}
+TEST(MyFloat, Multiplication3) {
+    float temp1 = -0.53684f, temp2 = 0.234985f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Multiplication(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 * temp2;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-5);
+}
+TEST(MyFloat, HyperbolicFunction1) {
+    float temp1 = -0.53684f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float res = HyperbolicFunction(val1);
+    float resFloat = *(float*)&res,resStand=1/temp1;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-5);
+}
+TEST(MyFloat, HyperbolicFunction2) {
+    float temp1 = -234651.53684f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float res = HyperbolicFunction(val1);
+    float resFloat = *(float*)&res,resStand=1/temp1;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-5);
+}
+
 
 int main(int argc, char* argv[]){
     testing::InitGoogleTest(&argc, argv);
