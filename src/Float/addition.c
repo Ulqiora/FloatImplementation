@@ -5,8 +5,8 @@ Float AdditionWithoutSign(Float val1, Float val2) {
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
     int exp1 = CalcNumDigitsAfterDot(mantissa1),
         exp2 = CalcNumDigitsAfterDot(mantissa2);
-    printf("exp1 = %d\n",exp1);
-    printf("exp2 = %d\n",exp2);
+    // printf("exp1 = %d\n",exp1);
+    // printf("exp2 = %d\n",exp2);
     int numAfterDot = ShiftByDot(&mantissa1, &mantissa2, exp1, exp2);
     int currentDegree =
         ShiftByDegree(&mantissa1, &mantissa2, GetDegree(val1), GetDegree(val2)) -
