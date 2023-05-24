@@ -1,7 +1,8 @@
 #include "main.h"
 int main() {
-    float inputS[NUMBER_NEURON_L1] = {150.35629f,236.5986f,5998.236f,0.12698f,2.123658f};
+    float inputS[NUMBER_NEURON_L1] = {150.35629f,236.5986f,5998.236f,0.12698f,2.123658f,23.658f,-435.436f,91.547f,846.0012f,104.000};
     Float* input = CopyNeuronsToMyFloat(inputS,NUMBER_NEURON_L1);
+    check
     for(int i=0;i<NUMBER_NEURON_L1;i++){
         assert(inputS[i] == *(float*)(input+i));
     }
@@ -27,6 +28,11 @@ float** InitWeightsL12Standart(){
     weights_L12_Stand[2][0] = 0.03569f;
     weights_L12_Stand[3][0] = -2.4569f;
     weights_L12_Stand[4][0] = 0.03569f;
+    weights_L12_Stand[5][0] = 0.03569f;
+    weights_L12_Stand[6][0] = -2.4569f;
+    weights_L12_Stand[7][0] = 0.03569f;
+    weights_L12_Stand[8][0] = -2.4569f;
+    weights_L12_Stand[9][0] = 0.03569f;
     return weights_L12_Stand;
 }
 
@@ -74,7 +80,7 @@ void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rig
             printf("%g\\\\%g\t",*(float*)(rightLayer+i),*(float*)(&res));
         }
         printf("\n");
-        // rightLayer[i] = FunctionActivation(rightLayer[i]);
+        rightLayer[i] = FunctionActivation(rightLayer[i]);
     }
 }
 void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer){
@@ -88,22 +94,6 @@ void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float
             printf("%g\\\\%g\t",rightLayer[i],leftLayer[j]*weights[j][i]);
         }
         printf("\n");
-        // rightLayer[i] = 1/(1+fabs(rightLayer[i]));
+        rightLayer[i] = 1/(1+fabs(rightLayer[i]));
     }
 }
-
-
-
-
-
-//     float val=236.5986;
-//     float val2=0.03569;
-//     Float temp = StandartFloatToCustomFloat(val);
-//     Float temp2 = StandartFloatToCustomFloat(val2);
-//     Float res = Multiplication(temp,temp2);
-//     PrintBits(temp);
-//     PrintBits(temp2);
-//     PrintBits(res);
-//     Float res2=StandartFloatToCustomFloat(val*val2);
-//     printf("%g\n",*((float*)&res2));
-//     printf("%g\n",*((float*)&res));

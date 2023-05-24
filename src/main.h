@@ -8,7 +8,7 @@
 #include <iostream>
 #include <cassert>
 #define assertm(exp, msg) assert(((void)msg, exp))
-#define NUMBER_NEURON_L1 5
+#define NUMBER_NEURON_L1 10
 #define NUMBER_NEURON_L2 1
 #define NUMBER_NEURON_L3 1
 using namespace std;
