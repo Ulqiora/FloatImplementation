@@ -2,9 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <chrono>
+#include <iostream>
 #define NUMBER_NEURON_L1 5
 #define NUMBER_NEURON_L2 1
 #define NUMBER_NEURON_L3 1
+using namespace std;
 void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer);
 void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer);
 void PrintResult(Float* output,int size);
@@ -30,15 +33,22 @@ int main() {
     weights_L12[3][0] = *(Float*)(weights_L12_Stand[3]+0);
     weights_L12[4][0] = *(Float*)(weights_L12_Stand[4]+0);
     
-    Float input[NUMBER_NEURON_L1] = {*(Float*)(&inputS)};
+    Float input[NUMBER_NEURON_L1];
+    for(int i=0;i<NUMBER_NEURON_L1;i++){
+        input[i] = *(Float*)(inputS+i);
+    }
     Float output[NUMBER_NEURON_L2];
     float outputS[NUMBER_NEURON_L2];
+    auto start = chrono::steady_clock::now();
     CalcNextLayer(weights_L12,NUMBER_NEURON_L1,NUMBER_NEURON_L2,input,output);
+    auto end = chrono::steady_clock::now();
     CalcNextLayerStand(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2,inputS,outputS);
     PrintResultS(outputS,NUMBER_NEURON_L2);
     PrintResult(output,NUMBER_NEURON_L2);
+        std::cout << "Elapsed time in nanoseconds: "
+        << chrono::duration_cast<chrono::nanoseconds>(end - start).count()
+        << " ns" << endl;
 }
-
 void PrintResult(Float* output,int size){
     for(int i=0;i<size;i++){
         printf("%g\n",*(float*)(output+i));
@@ -79,3 +89,18 @@ void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float
     }
 }
 
+
+
+
+
+//     float val=236.5986;
+//     float val2=0.03569;
+//     Float temp = StandartFloatToCustomFloat(val);
+//     Float temp2 = StandartFloatToCustomFloat(val2);
+//     Float res = Multiplication(temp,temp2);
+//     PrintBits(temp);
+//     PrintBits(temp2);
+//     PrintBits(res);
+//     Float res2=StandartFloatToCustomFloat(val*val2);
+//     printf("%g\n",*((float*)&res2));
+//     printf("%g\n",*((float*)&res));

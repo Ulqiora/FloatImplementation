@@ -3,6 +3,8 @@
         "float.h": "c",
         "stdio.h": "c",
         "cmath": "c",
-        "gtest.h": "c"
+        "gtest.h": "c",
+        "bitset": "c",
+        "algorithm": "c"
     }
 }
