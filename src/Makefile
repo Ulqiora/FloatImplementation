@@ -1,7 +1,7 @@
 CC=g++
 BD=../build
 GCOV_REPORT_FOLDER=$(BD)
-CXX_FLAGS=-c #-Wall -Werror -Wextra
+CXX_FLAGS=-c -g#-Wall -Werror -Wextra
 LCOVFLAGS=-fprofile-arcs -ftest-coverage
 GTESTFLAGS=-lgtest
 

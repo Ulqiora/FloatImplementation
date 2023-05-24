@@ -208,6 +208,28 @@ TEST(MyFloat, Multiplication3) {
     float resFloat = *(float*)&res,resStand=temp1 * temp2;
     printf("%f\n",resFloat);
     printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-3);
+}
+TEST(MyFloat, Multiplication4) {
+    float temp1 = 236.5986f, temp2 = -2.4569f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Multiplication(val1, val2);
+    float resFloat = *(float*)&res,resStand=temp1 * temp2;
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
+    EXPECT_TRUE(fabs(resFloat - resStand) < 1e-1);
+}
+TEST(MyFloat, Multiplication5) {
+    float temp1 = 2.12366f, temp2 = 0.03569f;
+    Float val1=StandartFloatToCustomFloat(temp1);
+    Float val2=StandartFloatToCustomFloat(temp2);
+    Float res = Multiplication(val1, val2);
+    PrintBits(res);
+    float resFloat = *(float*)&res,resStand=temp1 * temp2;
+    PrintBits(*(Float*)(&resStand));
+    printf("%f\n",resFloat);
+    printf("%f\n",resStand);
     EXPECT_TRUE(fabs(resFloat - resStand) < 1e-5);
 }
 TEST(MyFloat, HyperbolicFunction1) {

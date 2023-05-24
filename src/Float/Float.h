@@ -1,3 +1,5 @@
+#ifndef _SRC_MY_FLOAT_
+#define _SRC_MY_FLOAT_
 #include <stdio.h>
 
 #define SIGN_BIT_MASK 0x80000000
@@ -168,3 +170,4 @@ void PrintSign(Float temp);
 void PrintDegree(Float temp);
 void PrintMantissa(Float temp);
 void PrintBits(Float temp);
+#endif      // _SRC_MY_FLOAT_

@@ -5,6 +5,9 @@
         "cmath": "c",
         "gtest.h": "c",
         "bitset": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "atomic": "c",
+        "__locale": "c",
+        "functional": "c"
     }
 }

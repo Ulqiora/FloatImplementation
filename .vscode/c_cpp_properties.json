@@ -7,7 +7,7 @@
                 "/usr/include"
             ],
             "defines": [],
-            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
+            "compilerPath": "/usr/local/bin/g++-11",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64"

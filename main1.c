@@ -1,10 +1,32 @@
-#include "main.h"
+#include "Float/Float.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <chrono>
+#include <iostream>
+#include <cassert>
+#define assertm(exp, msg) assert(((void)msg, exp))
+#define NUMBER_NEURON_L1 5
+#define NUMBER_NEURON_L2 1
+#define NUMBER_NEURON_L3 1
+using namespace std;
+float** InitWeightsL12Standart();
+Float** CopyWeightsToMyFloat(float** weights,int rows, int cols);
+Float*  CopyNeuronsToMyFloat(float* neurons,int size);
+void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer);
+void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer);
+void PrintResult(Float* output,int size);
+void PrintResultS(float* output,int size);
 int main() {
     float inputS[NUMBER_NEURON_L1] = {150.35629f,236.5986f,5998.236f,0.12698f,2.123658f};
     Float* input = CopyNeuronsToMyFloat(inputS,NUMBER_NEURON_L1);
     for(int i=0;i<NUMBER_NEURON_L1;i++){
         assert(inputS[i] == *(float*)(input+i));
     }
+    // printf("%f\n",*(float*)(input+4));
+
+
+
     float** weights_L12_Stand = InitWeightsL12Standart();
     Float** weights_L12 = CopyWeightsToMyFloat(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2);
     for(int i=0;i<NUMBER_NEURON_L1;i++){
@@ -12,10 +34,28 @@ int main() {
             assert(weights_L12_Stand[i][j] == *(float*)(weights_L12[i] + j));
         }
     }
+    int numberNeurons = 4;
+    Float result = Multiplication(input[numberNeurons],weights_L12[numberNeurons][0]);
+    printf("arg1: %g\n",*(float*)(&input[numberNeurons]));
+    printf("arg2: %g\n",*(float*)(&weights_L12[numberNeurons][0]));
+    printf("MUL result: %g\n",*(float*)(&result));
+    printf("arg1: %g\n",inputS[numberNeurons]);
+    printf("arg2: %g\n",weights_L12_Stand[numberNeurons][0]);
+    printf("MUL result standart: %g\n",inputS[numberNeurons]*weights_L12_Stand[numberNeurons][0]);
+    
     Float output[NUMBER_NEURON_L2];
     float outputS[NUMBER_NEURON_L2];
+
+    // auto start = chrono::steady_clock::now();
     CalcNextLayer(weights_L12,NUMBER_NEURON_L1,NUMBER_NEURON_L2,input,output);
+    // auto end = chrono::steady_clock::now();
     CalcNextLayerStand(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2,inputS,outputS);
+    // printf("%g\n",Multiplication(input[4],weights_L12[4][0]));
+    // PrintResult((Float*)outputS,NUMBER_NEURON_L2);
+    // PrintResult(output,NUMBER_NEURON_L2);
+    //     std::cout << "Elapsed time in nanoseconds: "
+    //     << chrono::duration_cast<chrono::nanoseconds>(end - start).count()
+    //     << " ns" << endl;
 }
 
 float** InitWeightsL12Standart(){
@@ -70,8 +110,7 @@ void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rig
         for(int j=0;j<rows;j++){
             // printf("number neuron in leftlayer = %d\n",i);
             rightLayer[i] = Addiction(rightLayer[i],Multiplication(leftLayer[j],weights[j][i]));
-            Float res = Multiplication(leftLayer[j],weights[j][i]);
-            printf("%g\\\\%g\t",*(float*)(rightLayer+i),*(float*)(&res));
+            printf("%g\\\\%g\t",*(float*)(rightLayer+i),Multiplication(leftLayer[j],weights[j][i]));
         }
         printf("\n");
         // rightLayer[i] = FunctionActivation(rightLayer[i]);

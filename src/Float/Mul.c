@@ -1,8 +1,8 @@
 #include "Float.h"
 
 Float Multiplication(Float val1,Float val2){
-    Float res;
-    if (GetSign(val1) ^ GetSign(val2)) SetSign(&res);
+    Float res = {0};
+    if (GetSign(val1) != GetSign(val2)) SetSign(&res);
     int mantissa1 = GetMantissa(val1), mantissa2 = GetMantissa(val2);
     int degree1 = GetDegree(val1) - 127,
         degree2 = GetDegree(val2) - 127;
