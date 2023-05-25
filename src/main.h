@@ -15,8 +15,8 @@ using namespace std;
 float** InitWeightsL12Standart();
 Float** CopyWeightsToMyFloat(float** weights,int rows, int cols);
 Float*  CopyNeuronsToMyFloat(float* neurons,int size);
-void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer);
-void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer);
+void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer,float* biasWeights);
+void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer,Float* biasWeights);
 void PrintResult(Float* output,int size);
 void PrintResultS(float* output,int size);
 #endif //_SRC_MAIN_H_

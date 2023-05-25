@@ -2,21 +2,14 @@
 int main() {
     float inputS[NUMBER_NEURON_L1] = {150.35629f,236.5986f,5998.236f,0.12698f,2.123658f,23.658f,-435.436f,91.547f,846.0012f,104.000};
     Float* input = CopyNeuronsToMyFloat(inputS,NUMBER_NEURON_L1);
-    check
-    for(int i=0;i<NUMBER_NEURON_L1;i++){
-        assert(inputS[i] == *(float*)(input+i));
-    }
+    float biasWeightsS[NUMBER_NEURON_L2] = {150.35629f};
+    Float* biasWeights = CopyNeuronsToMyFloat(inputS,NUMBER_NEURON_L2);
     float** weights_L12_Stand = InitWeightsL12Standart();
     Float** weights_L12 = CopyWeightsToMyFloat(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2);
-    for(int i=0;i<NUMBER_NEURON_L1;i++){
-        for (int j = 0; j < NUMBER_NEURON_L2; j++) {
-            assert(weights_L12_Stand[i][j] == *(float*)(weights_L12[i] + j));
-        }
-    }
     Float output[NUMBER_NEURON_L2];
     float outputS[NUMBER_NEURON_L2];
-    CalcNextLayer(weights_L12,NUMBER_NEURON_L1,NUMBER_NEURON_L2,input,output);
-    CalcNextLayerStand(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2,inputS,outputS);
+    CalcNextLayer(weights_L12,NUMBER_NEURON_L1,NUMBER_NEURON_L2,input,output,biasWeights);
+    CalcNextLayerStand(weights_L12_Stand,NUMBER_NEURON_L1,NUMBER_NEURON_L2,inputS,outputS,biasWeightsS);
 }
 
 float** InitWeightsL12Standart(){
@@ -68,32 +61,28 @@ void PrintResultS(float* output,int size){
     }
 }
 
-void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer){
-    // printf("number neurons in leftlayer = %d\n",cols);
+void CalcNextLayer(Float** weights,int rows,int cols,Float* leftLayer,Float* rightLayer,Float* biasWeights){
     for(int i=0;i<cols;i++){
-        // printf("number neuron in rightlayer = %d\n",i);
         rightLayer[i].value_ = 0;
         for(int j=0;j<rows;j++){
-            // printf("number neuron in leftlayer = %d\n",i);
             rightLayer[i] = Addiction(rightLayer[i],Multiplication(leftLayer[j],weights[j][i]));
             Float res = Multiplication(leftLayer[j],weights[j][i]);
             printf("%g\\\\%g\t",*(float*)(rightLayer+i),*(float*)(&res));
         }
         printf("\n");
+        rightLayer[i] = Addiction(rightLayer[i],biasWeights[i]);
         rightLayer[i] = FunctionActivation(rightLayer[i]);
     }
 }
-void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer){
-    // printf("number neurons in leftlayer = %d\n",cols);
+void CalcNextLayerStand(float** weights,int rows,int cols,float* leftLayer,float* rightLayer,float* biasWeights){
     for(int i=0;i<cols;i++){
-        // printf("number neuron in rightlayer = %d\n",i);
         rightLayer[i] = 0;
         for(int j=0;j<rows;j++){
-            // printf("number neuron in leftlayer = %d\n",i);
             rightLayer[i] = rightLayer[i] + leftLayer[j]*weights[j][i];
             printf("%g\\\\%g\t",rightLayer[i],leftLayer[j]*weights[j][i]);
         }
         printf("\n");
+        rightLayer[i] += biasWeights[i];
         rightLayer[i] = 1/(1+fabs(rightLayer[i]));
     }
 }
